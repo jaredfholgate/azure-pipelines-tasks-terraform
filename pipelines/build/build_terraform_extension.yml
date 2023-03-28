@@ -1,39 +1,37 @@
-parameters:
-  repo: self
-
 jobs:
 - job: terraform_extension
-  dependsOn: ['terraform_cli', 'terraform_installer']
   variables:
       GitVersion.SemVer: $[stageDependencies.pre_build.version.outputs['version.GitVersion.SemVer']]
+      ext_versions: [ self, zero ]
   steps:
-    - checkout: ${{ parameters.repo }}
-    - task: DownloadPipelineArtifact@2
-      displayName: download terraform installer
-      inputs: 
-        artifact: terraform_installer_${{ parameters.repo }}
-        path: $(terraform_extension_dir)
-    - task: DownloadPipelineArtifact@2
-      displayName: download terraform cli
-      inputs: 
-        artifact: terraform_cli_${{ parameters.repo }}
-        path: $(terraform_extension_dir)
-    - task: DownloadPipelineArtifact@2
-      displayName: download views terraform plan
-      inputs: 
-        artifact: views_terraform_plan_${{ parameters.repo }}
-        path: $(terraform_extension_dir)
-    - task: Npm@1
-      displayName: version
-      inputs:
-        workingDir: $(terraform_extension_dir)
-        command: custom
-        customCommand: version $(GitVersion.SemVer) --no-git-tag-version --allow-same-version
-    - task: Npm@1
-      displayName: install  
-      inputs:
-        workingDir: $(terraform_extension_dir)
-        command: ci
+    - ${{ each ex_version in variables.ext_versions }}:
+      - task: DownloadPipelineArtifact@2
+        displayName: download terraform installer
+        inputs: 
+          artifact: terraform_installer_$(ex_version)
+          path: $(terraform_extension_dir)
+      - task: DownloadPipelineArtifact@2
+        displayName: download terraform cli
+        inputs: 
+          artifact: terraform_cli_$(ex_version)
+          path: $(terraform_extension_dir)
+      - task: DownloadPipelineArtifact@2
+        displayName: download views terraform plan
+        inputs: 
+          artifact: views_terraform_plan_$(ex_version)
+          path: $(terraform_extension_dir)
+      - task: Npm@1
+        displayName: version
+        inputs:
+          workingDir: $(terraform_extension_dir)
+          command: custom
+          customCommand: version $(GitVersion.SemVer) --no-git-tag-version --allow-same-version
+      - task: Npm@1
+        displayName: install  
+        inputs:
+          workingDir: $(terraform_extension_dir)
+          command: ci
+
     - task: CopyFiles@2
       displayName: stage extension
       inputs:

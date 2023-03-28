@@ -2,11 +2,15 @@ parameters:
   stage: ''
 
 stages:
+- stage: pre_build
+  jobs:
+    - template: build_version.yml
+    
 - stage: build_${{ parameters.stage }}_current
+  dependsOn: pre_build
   variables:
     - group: build
   jobs:
-  - template: build_version.yml
   - template: build_terraform_installer.yml
   - template: build_views_terraform_plan.yml
   - template: build_terraform_cli.yml
@@ -14,13 +18,13 @@ stages:
   - template: build_terraform_templates.yml
 
 - stage: build_${{ parameters.stage }}_zero
+  dependsOn: pre_build
   variables:
     - group: build
   jobs:
-  - template: build_version.yml
+  - template: build_terraform_installer.yml
     parameters: 
       repo: zero
-  - template: build_terraform_installer.yml
   - template: build_views_terraform_plan.yml
   - template: build_terraform_cli.yml
   - template: build_terraform_extension.yml

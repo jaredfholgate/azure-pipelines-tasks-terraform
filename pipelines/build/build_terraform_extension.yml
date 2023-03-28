@@ -1,8 +1,8 @@
 jobs:
 - job: terraform_extension
-  dependsOn: ['version', 'terraform_cli', 'terraform_installer']
+  dependsOn: ['terraform_cli', 'terraform_installer']
   variables:
-      GitVersion.SemVer: $[ dependencies.version.outputs['version.GitVersion.SemVer'] ]
+      GitVersion.SemVer: $[stageDependencies.pre_build.version.outputs['version.GitVersion.SemVer']]
   steps:
     - task: DownloadPipelineArtifact@2
       displayName: download terraform installer

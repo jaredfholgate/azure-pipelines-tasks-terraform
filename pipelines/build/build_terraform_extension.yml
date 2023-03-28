@@ -6,8 +6,10 @@ jobs:
   steps:
     - ${{ each ex_version in split(variables.ext_versions, ', ') }}:
       - script: |
+          echo ${{ ex_version }}
           echo ${{ ex_version.key }}
           echo ${{ ex_version.value }}
+        displayName: Test ex_version
 
       - task: DownloadPipelineArtifact@2
         displayName: download terraform installer

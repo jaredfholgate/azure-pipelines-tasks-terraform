@@ -26,6 +26,8 @@ stages:
     parameters: 
       repo: zero
   - template: build_views_terraform_plan.yml
+    parameters: 
+      repo: zero
   - template: build_terraform_cli.yml
-  - template: build_terraform_extension.yml
-  - template: build_terraform_templates.yml
+    parameters: 
+      repo: zero

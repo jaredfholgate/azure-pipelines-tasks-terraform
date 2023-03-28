@@ -7,7 +7,7 @@ jobs:
       GitVersion.Minor: $[ dependencies.version.outputs['version.GitVersion.Minor'] ]
       GitVersion.Patch: $[ dependencies.version.outputs['version.GitVersion.Patch'] ]
   steps:
-    - checkout: $(repo)
+    - checkout: $[ variables.repo ]
     - task: Npm@1
       displayName: version
       inputs:

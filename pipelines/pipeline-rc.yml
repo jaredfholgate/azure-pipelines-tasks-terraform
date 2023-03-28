@@ -36,9 +36,10 @@ variables:
 resources:
   repositories:
   - repository: zero
-    type: git
+    type: github
     ref: 'refs/tags/$(zero_tag)'
-    name: azure-pipelines-terraform-rc
+    name: jason-johnson/azure-pipelines-tasks-terraform
+    endpoint: 'azure-pipelines-terraform-rc (1)'
 
 pool:
   vmImage: ubuntu-latest

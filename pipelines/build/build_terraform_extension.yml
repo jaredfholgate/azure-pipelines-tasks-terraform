@@ -1,8 +1,8 @@
 jobs:
 - job: terraform_extension
   variables:
-    - GitVersion.SemVer: $[stageDependencies.pre_build.version.outputs['version.GitVersion.SemVer']]
-    - ext_versions: [ self, zero ]
+    GitVersion.SemVer: $[stageDependencies.pre_build.version.outputs['version.GitVersion.SemVer']]
+    ext_versions: [ self, zero ]
   steps:
     - ${{ each ex_version in variables.ext_versions }}:
       - task: DownloadPipelineArtifact@2

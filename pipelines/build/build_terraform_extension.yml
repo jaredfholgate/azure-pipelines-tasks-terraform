@@ -5,20 +5,24 @@ jobs:
     ext_versions: self, zero
   steps:
     - ${{ each ex_version in split(variables.ext_versions, ', ') }}:
+      - script: |
+          echo ${{ ex_version.key }}
+          echo ${{ ex_version.value }}
+
       - task: DownloadPipelineArtifact@2
         displayName: download terraform installer
         inputs: 
-          artifact: terraform_installer_$(ex_version)
+          artifact: terraform_installer_${{ ex_version.value }}
           path: $(terraform_extension_dir)
       - task: DownloadPipelineArtifact@2
         displayName: download terraform cli
         inputs: 
-          artifact: terraform_cli_$(ex_version)
+          artifact: terraform_cli_${{ ex_version.value }}
           path: $(terraform_extension_dir)
       - task: DownloadPipelineArtifact@2
         displayName: download views terraform plan
         inputs: 
-          artifact: views_terraform_plan_$(ex_version)
+          artifact: views_terraform_plan_${{ ex_version.value }}
           path: $(terraform_extension_dir)
       - task: Npm@1
         displayName: version

@@ -7,24 +7,22 @@ jobs:
     - ${{ each ex_version in split(variables.ext_versions, ', ') }}:
       - script: |
           echo ${{ ex_version }}
-          echo ${{ ex_version.key }}
-          echo ${{ ex_version.value }}
         displayName: Test ex_version
 
       - task: DownloadPipelineArtifact@2
         displayName: download terraform installer
         inputs: 
-          artifact: terraform_installer_${{ ex_version.value }}
+          artifact: terraform_installer_${{ ex_version }}
           path: $(terraform_extension_dir)
       - task: DownloadPipelineArtifact@2
         displayName: download terraform cli
         inputs: 
-          artifact: terraform_cli_${{ ex_version.value }}
+          artifact: terraform_cli_${{ ex_version }}
           path: $(terraform_extension_dir)
       - task: DownloadPipelineArtifact@2
         displayName: download views terraform plan
         inputs: 
-          artifact: views_terraform_plan_${{ ex_version.value }}
+          artifact: views_terraform_plan_${{ ex_version }}
           path: $(terraform_extension_dir)
       - task: Npm@1
         displayName: version

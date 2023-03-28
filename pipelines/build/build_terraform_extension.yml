@@ -1,23 +1,27 @@
+parameters:
+  repo: self
+
 jobs:
 - job: terraform_extension
   dependsOn: ['terraform_cli', 'terraform_installer']
   variables:
       GitVersion.SemVer: $[stageDependencies.pre_build.version.outputs['version.GitVersion.SemVer']]
   steps:
+    - checkout: ${{ parameters.repo }}
     - task: DownloadPipelineArtifact@2
       displayName: download terraform installer
       inputs: 
-        artifact: terraform_installer
+        artifact: terraform_installer_${{ parameters.repo }}
         path: $(terraform_extension_dir)
     - task: DownloadPipelineArtifact@2
       displayName: download terraform cli
       inputs: 
-        artifact: terraform_cli
+        artifact: terraform_cli_${{ parameters.repo }}
         path: $(terraform_extension_dir)
     - task: DownloadPipelineArtifact@2
       displayName: download views terraform plan
       inputs: 
-        artifact: views_terraform_plan
+        artifact: views_terraform_plan_${{ parameters.repo }}
         path: $(terraform_extension_dir)
     - task: Npm@1
       displayName: version
@@ -45,4 +49,4 @@ jobs:
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: '$(Build.ArtifactStagingDirectory)/terraform_extension'
-        artifactName: terraform_extension
+        artifactName: terraform_extension_${{ parameters.repo }}

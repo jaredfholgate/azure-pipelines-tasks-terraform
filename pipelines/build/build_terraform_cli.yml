@@ -1,3 +1,6 @@
+parameters:
+  repo: self
+
 jobs:
 - job: terraform_cli
   variables:
@@ -6,6 +9,7 @@ jobs:
       GitVersion.Minor: $[stageDependencies.pre_build.version.outputs['version.GitVersion.Minor'] ]
       GitVersion.Patch: $[stageDependencies.pre_build.version.outputs['version.GitVersion.Patch'] ]
   steps:
+    - checkout: ${{ parameters.repo }}
     - task: Npm@1
       displayName: version
       inputs:
@@ -65,5 +69,5 @@ jobs:
           tasks/terraform-cli/.dist/**/*
         targetFolder: $(Build.ArtifactStagingDirectory)
     - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: terraform_cli
+      artifact: terraform_cli_${{ parameters.repo }}
       displayName: publish artifacts

@@ -1,3 +1,6 @@
+parameters:
+  repo: self
+
 jobs:
 - job: views_terraform_plan
   variables:
@@ -6,6 +9,7 @@ jobs:
       GitVersion.Minor: $[stageDependencies.pre_build.version.outputs['version.GitVersion.Minor'] ]
       GitVersion.Patch: $[stageDependencies.pre_build.version.outputs['version.GitVersion.Patch'] ]
   steps:
+    - checkout: ${{ parameters.repo }}
     - task: Npm@1
       displayName: version
       inputs:
@@ -54,5 +58,5 @@ jobs:
           views/terraform-plan/.dist/**/*
         targetFolder: $(Build.ArtifactStagingDirectory)
     - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: views_terraform_plan
+      artifact: views_terraform_plan_${{ parameters.repo }}
       displayName: publish artifacts

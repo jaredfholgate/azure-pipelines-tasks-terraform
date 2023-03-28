@@ -2,9 +2,24 @@ parameters:
   stage: ''
 
 stages:
-- stage: build_${{ parameters.stage }}
+- stage: build_${{ parameters.stage }}_current
   variables:
     - group: build
+    - name: repo
+      value: self
+  jobs:
+  - template: build_version.yml
+  - template: build_terraform_installer.yml
+  - template: build_views_terraform_plan.yml
+  - template: build_terraform_cli.yml
+  - template: build_terraform_extension.yml
+  - template: build_terraform_templates.yml
+
+- stage: build_${{ parameters.stage }}_zero
+  variables:
+    - group: build
+    - name: repo
+      value: zero
   jobs:
   - template: build_version.yml
   - template: build_terraform_installer.yml

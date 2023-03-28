@@ -51,4 +51,4 @@ jobs:
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: '$(Build.ArtifactStagingDirectory)/terraform_extension'
-        artifactName: terraform_extension_${{ parameters.repo }}
+        artifactName: terraform_extension
